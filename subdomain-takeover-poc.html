@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Security Advisory: Subdomain Takeover PoC</title>
+<style>
+  :root{
+    --bg:#f7f7f8; --card:#ffffff; --text:#1a1a1a; --muted:#5b5f66;
+    --border:#e2e4e8; --accent:#b3261e; --accent-bg:#fdecec; --accent-border:#f3c6c4;
+    --ok:#1a7f4b; --ok-bg:#eaf7ef; --mono-bg:#f1f2f4; --link:#1155cc;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#15161a; --card:#1e2025; --text:#e8e9ec; --muted:#9a9ea7;
+      --border:#2d2f36; --accent:#ff6b64; --accent-bg:#2a1918; --accent-border:#4a2422;
+      --ok:#5fd68c; --ok-bg:#12271c; --mono-bg:#111214; --link:#7aa7ff;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#15161a; --card:#1e2025; --text:#e8e9ec; --muted:#9a9ea7;
+    --border:#2d2f36; --accent:#ff6b64; --accent-bg:#2a1918; --accent-border:#4a2422;
+    --ok:#5fd68c; --ok-bg:#12271c; --mono-bg:#111214; --link:#7aa7ff;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    padding-block:32px; padding-left:16px; padding-right:16px;
+    line-height:1.55;
+  }
+  .wrap{max-width:760px; margin:0 auto;}
+  .banner{
+    background:var(--accent-bg); border:1px solid var(--accent-border); color:var(--accent);
+    border-radius:10px; padding:14px 18px; font-weight:600; font-size:15px;
+    display:flex; align-items:center; gap:10px; margin-bottom:24px;
+  }
+  .banner svg{flex:none; width:20px; height:20px;}
+  h1{font-size:1.5rem; margin:0 0 6px; letter-spacing:-0.01em;}
+  .subtitle{color:var(--muted); font-size:0.95rem; margin:0 0 28px;}
+  .card{
+    background:var(--card); border:1px solid var(--border); border-radius:12px;
+    padding:22px 24px; margin-bottom:20px;
+  }
+  .card h2{font-size:1rem; margin:0 0 14px; display:flex; align-items:center; gap:8px;}
+  .kv{display:grid; grid-template-columns:150px 1fr; gap:8px 16px; font-size:0.92rem;}
+  .kv dt{color:var(--muted);}
+  .kv dd{margin:0; word-break:break-word;}
+  code, .mono{
+    font-family:"SF Mono",Consolas,Menlo,monospace; background:var(--mono-bg);
+    border-radius:6px; padding:2px 6px; font-size:0.88em;
+  }
+  pre{
+    background:var(--mono-bg); border:1px solid var(--border); border-radius:8px;
+    padding:14px 16px; overflow-x:auto; font-size:0.85rem; margin:0;
+  }
+  pre code{background:none; padding:0;}
+  .badge-ok{
+    display:inline-flex; align-items:center; gap:6px; background:var(--ok-bg); color:var(--ok);
+    border-radius:999px; padding:4px 12px; font-size:0.82rem; font-weight:600; margin-bottom:14px;
+  }
+  ol{padding-left:20px; margin:0;}
+  ol li{margin-bottom:8px;}
+  a{color:var(--link);}
+  .placeholder{color:var(--muted); font-style:italic;}
+  footer{color:var(--muted); font-size:0.82rem; text-align:center; margin-top:32px;}
+  @media (max-width:480px){
+    .kv{grid-template-columns:1fr;}
+    .kv dt{font-weight:600;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="banner">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4m0 4h.01M10.29 3.86l-8.18 14.14A1 1 0 0 0 3 19.5h18a1 1 0 0 0 .89-1.5L13.71 3.86a1 1 0 0 0-1.73 0z"/></svg>
+    <span>Security Research Proof-of-Concept — No malicious action taken</span>
+  </div>
+
+  <h1>Subdomain Takeover Demonstration</h1>
+  <p class="subtitle">Responsible disclosure evidence, prepared for the domain owner's security team.</p>
+
+  <div class="card">
+    <span class="badge-ok">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
+      Takeover successfully demonstrated
+    </span>
+    <h2>Finding summary</h2>
+    <dl class="kv">
+      <dt>Affected host</dt><dd><code>staging-real-2.windsurf.com</code></dd>
+      <dt>Vulnerability class</dt><dd>Dangling DNS record → Subdomain Takeover (CWE-350)</dd>
+      <dt>Dangling record type</dt><dd>CNAME pointing to an unclaimed / de-provisioned <strong>Vercel</strong> deployment target</dd>
+      <dt>Impact</dt><dd>Arbitrary content hosting under the target's own subdomain; potential for phishing, cookie/session abuse against the parent domain's origin, and reputational damage</dd>
+      <dt>This page served from</dt><dd>A Vercel project claimed by the researcher at the exact hostname above</dd>
+      <dt>Reported by</dt><dd>Aman Bhuiyan — Independent Security Researcher, Bangladesh</dd>
+      <dt>Date observed</dt><dd>15 September 2026</dd>
+    </dl>
+  </div>
+
+  <div class="card">
+    <h2>How this was demonstrated</h2>
+    <ol>
+      <li>DNS lookup showed <code>staging-real-2.windsurf.com</code> resolving via CNAME to a Vercel deployment hostname that returned Vercel's "Deployment not found" / unclaimed-project response.</li>
+      <li>The researcher registered a new project on Vercel and added the exact idle hostname as a custom domain — Vercel accepted the assignment because no existing project on the platform had claimed it.</li>
+      <li>Vercel issued the domain verification and began serving traffic for <code>staging-real-2.windsurf.com</code> from the researcher's project, confirming full control over the content returned at that hostname.</li>
+      <li>This page is the content now served at that hostname, serving solely as evidence for the report below. No data was accessed, modified, or exfiltrated, and no destination other than this notice was configured.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>DNS evidence</h2>
+    <p class="placeholder">Paste your <code>dig</code> / <code>nslookup</code> output below before sending this report.</p>
+    <pre><code>$ dig staging-real-2.windsurf.com CNAME +short
+&lt;paste CNAME target here&gt;
+
+$ curl -sI https://staging-real-2.windsurf.com
+&lt;paste response headers here — before/after claiming&gt;</code></pre>
+  </div>
+
+  <div class="card">
+    <h2>Suggested remediation</h2>
+    <ol>
+      <li>Remove the dangling CNAME record for <code>staging-real-2.windsurf.com</code> from the DNS zone, or</li>
+      <li>Re-provision and re-claim the corresponding Vercel project/domain under the organization's own Vercel account before the record is restored.</li>
+      <li>Audit other subdomains for similarly stale CNAME records pointing to decommissioned third-party services (Vercel, Netlify, Heroku, GitHub Pages, S3, etc.).</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>Disclosure &amp; contact</h2>
+    <p>This proof-of-concept was created solely to demonstrate impact for a responsible disclosure report and will be taken down promptly once acknowledged, or on request. No harm was intended or caused to Windsurf, its users, or its infrastructure.</p>
+    <p>Contact: <span class="placeholder">[your disclosure contact email / handle]</span></p>
+  </div>
+
+  <footer>Prepared by Aman Bhuiyan &middot; Independent Security Researcher &middot; Bangladesh &middot; 15 September 2026</footer>
+
+</div>
+</body>
+</html>
