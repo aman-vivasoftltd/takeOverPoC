@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subdomain Takeover - IceCream</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #ff6b6b;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        h2 {
+            font-size: 1.5em;
+            color: #4ecdc4;
+            margin-bottom: 30px;
+        }
+        p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: #dcdcdc;
+            margin-bottom: 20px;
+        }
+        .signature {
+            margin-top: 40px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #ffd93d;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 20px;
+        }
+        .impact {
+            background: rgba(255, 107, 107, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #ff6b6b;
+        }
+        .icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">⚠️</div>
+        <h1>Takeover Confirmed</h1>
+        <h2>This subdomain is vulnerable</h2>
+        
+        <div class="impact">
+            <p><strong>Impact:</strong> An attacker can host arbitrary content on this subdomain. This could lead to phishing attacks, credential theft, or malware distribution.</p>
+        </div>
+
+        <p>The CNAME record for this subdomain points to GitHub Pages, but the target repository does not exist or has been deleted. Therefore, I have claimed it.</p>
+
+        <div class="signature">
+            <p>Hacked by <span style="color: #ff6b6b;">IceCream</span></p>
+            <p style="font-size: 0.9em; color: #aaa;">Bug Bounty Hunter</p>
+        </div>
+    </div>
+</body>
+</html>
